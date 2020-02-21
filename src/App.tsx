@@ -1,4 +1,4 @@
-import React, { FC, useRef, useState } from 'react';
+import React, { FC, useRef, useState, useEffect } from 'react';
 import useForceUpdate from 'use-force-update';
 import './App.css';
 import { content, addContent, selectAll } from './content';
@@ -9,7 +9,15 @@ const App: FC = () => {
 
   const [filterType, setFilterType] = useState('All');
 
-  const refInput = useRef<HTMLInputElement>(null);
+	const refInput = useRef<HTMLInputElement>(null);
+	const refCheckbox = useRef<HTMLInputElement>(null);
+
+	useEffect(() => {
+		if (content.length === content.filter((item) => item.isShowed === true).length) {
+			refCheckbox.current!.checked = true;
+		}
+		else refCheckbox.current!.checked = false;
+	})
 
   const block = () => {
 		switch (filterType) {
@@ -53,6 +61,7 @@ const App: FC = () => {
 			<p>
 				<input
 					type="checkbox"
+					ref={refCheckbox}
 					onChange={(e) => {
 						e.target.checked ? selectAll(true) : selectAll(false);
 						forceUpdate();
